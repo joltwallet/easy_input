@@ -1,63 +1,87 @@
 menu "Easy_Input Config"
 
-config EASY_INPUT_PUSH_BUTTON_UP_PIN
-    int 
-    prompt "Pin for push button Up Input"
-    default -1
-    help
-        ESP32 GPIO Number
+    menu "Push Buttons"
+        config EASY_INPUT_PUSH_BUTTON_ENABLE
+            bool "Enable Push Button Inputs"
+            default true
+            help
+                This enables the use of normal pushbuttons as input
 
-config EASY_INPUT_PUSH_BUTTON_DOWN_PIN
-    int 
-    prompt "Pin for Down Input"
-    default -1
-    help
-        ESP32 GPIO Number
+        config EASY_INPUT_PUSH_BUTTON_UP_PIN
+            int 
+            depends on EASY_INPUT_PUSH_BUTTON_ENABLE
+            range -1 39
+            prompt "Pin for push button Up Input"
+            default -1
+            help
+                ESP32 GPIO Number
 
-config EASY_INPUT_PUSH_BUTTON_LEFT_PIN
-    int 
-    prompt "Pin for LEFT Input"
-    default -1
-    help
-        ESP32 GPIO Number
+        config EASY_INPUT_PUSH_BUTTON_DOWN_PIN
+            int 
+            depends on EASY_INPUT_PUSH_BUTTON_ENABLE
+            range -1 39
+            prompt "Pin for Down Input"
+            default -1
+            help
+                ESP32 GPIO Number
 
-config EASY_INPUT_PUSH_BUTTON_RIGHT_PIN
-    int 
-    prompt "Pin for RIGHT Input"
-    default -1
-    help
-        ESP32 GPIO Number
+        config EASY_INPUT_PUSH_BUTTON_LEFT_PIN
+            int 
+            depends on EASY_INPUT_PUSH_BUTTON_ENABLE
+            range -1 39
+            prompt "Pin for LEFT Input"
+            default -1
+            help
+                ESP32 GPIO Number
 
-config EASY_INPUT_PUSH_BUTTON_BACK_PIN
-    int 
-    prompt "Pin for BACK Input"
-    default -1
-    help
-        ESP32 GPIO Number
+        config EASY_INPUT_PUSH_BUTTON_RIGHT_PIN
+            int 
+            depends on EASY_INPUT_PUSH_BUTTON_ENABLE
+            range -1 39
+            prompt "Pin for RIGHT Input"
+            default -1
+            help
+                ESP32 GPIO Number
 
-config EASY_INPUT_PUSH_BUTTON_ENTER_PIN
-    int 
-    prompt "Pin for ENTER Input"
-    default -1
-    help
-        ESP32 GPIO Number
+        config EASY_INPUT_PUSH_BUTTON_BACK_PIN
+            int 
+            depends on EASY_INPUT_PUSH_BUTTON_ENABLE
+            range -1 39
+            prompt "Pin for BACK Input"
+            default -1
+            help
+                ESP32 GPIO Number
 
-config EASY_INPUT_PUSH_BUTTON_POLLING_PERIOD_MS
-    int
-    prompt "Milliseconds between push button polling periods"
-    default 10
-    help
-        A higher number means less frequent polling, but uses less CPU cycles.
-        Too high of a polling period and you might miss valid button presses.
+        config EASY_INPUT_PUSH_BUTTON_ENTER_PIN
+            int 
+            depends on EASY_INPUT_PUSH_BUTTON_ENABLE
+            range -1 39
+            prompt "Pin for ENTER Input"
+            default -1
+            help
+                ESP32 GPIO Number
 
-config EASY_INPUT_PUSH_BUTTON_DEBOUNCE_PERIOD
-    int
-    prompt "Number of polling cycles with switch in active state to be considered actuated"
-    default 4
-    help
-        A switch's counter is incremented everytime it is active during a polling
-        cycle. A switch's counter is decremented everytime it is not active during
-        a polling cycle. When a button's counter reaches this threshold, it is
-        considered a successful button push.
+        config EASY_INPUT_PUSH_BUTTON_POLLING_PERIOD_MS
+            int
+            depends on EASY_INPUT_PUSH_BUTTON_ENABLE
+            range 0 1000
+            prompt "Milliseconds between push button polling periods"
+            default 10
+            help
+                A higher number means less frequent polling, but uses less CPU cycles.
+                Too high of a polling period and you might miss valid button presses.
+
+        config EASY_INPUT_PUSH_BUTTON_DEBOUNCE_PERIOD
+            int
+            depends on EASY_INPUT_PUSH_BUTTON_ENABLE
+            range 0 255
+            prompt "Number of polling cycles with switch in active state to be considered actuated"
+            default 4
+            help
+                A switch's counter is incremented everytime it is active during a polling
+                cycle. A switch's counter is decremented everytime it is not active during
+                a polling cycle. When a button's counter reaches this threshold, it is
+                considered a successful button push.
+        endmenu
 
 endmenu
