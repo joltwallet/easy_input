@@ -1,3 +1,58 @@
 menu "Easy_Input Config"
 
+config EASY_INPUT_PUSH_BUTTON_UP_PIN
+    int 
+    prompt "Pin for push button Up Input"
+    default -1
+    help
+        help text here
+config EASY_INPUT_PUSH_BUTTON_DOWN_PIN
+    int 
+    prompt "Pin for Down Input"
+    default -1
+    help
+        help text here
+
+config EASY_INPUT_PUSH_BUTTON_LEFT_PIN
+    int 
+    prompt "Pin for LEFT Input"
+    default -1
+    help
+        help text here
+config EASY_INPUT_PUSH_BUTTON_RIGHT_PIN
+    int 
+    prompt "Pin for RIGHT Input"
+    default -1
+    help
+        help text here
+
+config EASY_INPUT_PUSH_BUTTON_BACK_PIN
+    int 
+    prompt "Pin for BACK Input"
+    default -1
+    help
+        help text here
+
+config EASY_INPUT_PUSH_BUTTON_ENTER_PIN
+    int 
+    prompt "Pin for ENTER Input"
+    default -1
+    help
+        help text here
+
+
+config EASY_INPUT_PUSH_BUTTON_POLLING_PERIOD_MS
+    int
+    prompt "Milliseconds between push button polling periods"
+    default 10
+    help
+        help text here
+
+config EASY_INPUT_PUSH_BUTTON_DEBOUNCE_PERIOD
+    int
+    prompt "Number of polling cycles with switch in active state to be considered actuated"
+    default 4
+    help
+        help text here
+
 endmenu
