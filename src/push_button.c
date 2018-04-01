@@ -54,7 +54,7 @@ static bool button_periodic_update(push_button_t *button){
     return false;
 }
 
-TaskFunction_t easy_input_push_button_task( void *input_queue ){
+void easy_input_push_button_task( void *input_queue ){
     /* Sets up Input buttons, polls them for digital filter, and when
      * a debounced input has been triggered, puts the resulting bitmask onto
      * the specified input_queue */
