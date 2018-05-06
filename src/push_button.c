@@ -87,8 +87,8 @@ void easy_input_push_button_task( void *input_queue ){
     #endif
 
     for(uint64_t triggered_buttons=0;;
-            vTaskDelayUntil(&xNextWakeTime, \
-            pdMS_TO_TICKS(CONFIG_EASY_INPUT_PUSH_BUTTON_POLLING_PERIOD_MS))) {
+            vTaskDelay(pdMS_TO_TICKS(
+            CONFIG_EASY_INPUT_PUSH_BUTTON_POLLING_PERIOD_MS))) {
         triggered_buttons = 0;
 
         #if CONFIG_EASY_INPUT_PUSH_BUTTON_UP_PIN != -1
