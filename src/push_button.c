@@ -58,7 +58,6 @@ void easy_input_push_button_task( void *input_queue ){
     /* Sets up Input buttons, polls them for digital filter, and when
      * a debounced input has been triggered, puts the resulting bitmask onto
      * the specified input_queue */
-    TickType_t xNextWakeTime = xTaskGetTickCount();
 
     // Declare buttons
     #if CONFIG_EASY_INPUT_PUSH_BUTTON_UP_PIN != -1
