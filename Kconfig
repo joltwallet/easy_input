@@ -11,7 +11,7 @@ menu "Easy_Input Config"
             int 
             depends on EASY_INPUT_PUSH_BUTTON_ENABLE
             range -1 39
-            prompt "Pin for push button Up Input"
+            prompt "Pin for UP Input"
             default -1
             help
                 ESP32 GPIO Number
@@ -20,7 +20,7 @@ menu "Easy_Input Config"
             int 
             depends on EASY_INPUT_PUSH_BUTTON_ENABLE
             range -1 39
-            prompt "Pin for Down Input"
+            prompt "Pin for DOWN Input"
             default -1
             help
                 ESP32 GPIO Number
