@@ -3,7 +3,7 @@ menu "Easy_Input Config"
     menu "Push Buttons"
         config EASY_INPUT_PUSH_BUTTON_ENABLE
             bool "Enable Push Button Inputs"
-            default true
+            default y
             help
                 This enables the use of normal pushbuttons as input
 
