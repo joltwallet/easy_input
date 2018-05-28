@@ -30,11 +30,11 @@ TEST_CASE("Push Button 10 Times", "[easy_input]"){
 
     for(int i=0; i< 10; i++){
         // Block until user inputs a button
-		if(xQueueReceive(input_queue, &input_buf, portMAX_DELAY)) {
+        if(xQueueReceive(input_queue, &input_buf, portMAX_DELAY)) {
             printf("User Input #%d: 0b", i);
             print_binary(input_buf);
             printf("\n");
-		}
+        }
     }
     vTaskDelete(h_push_button);
 }
