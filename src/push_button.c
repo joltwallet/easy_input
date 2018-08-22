@@ -10,9 +10,11 @@
 #include "soc/timer_group_struct.h"
 #include "driver/timer.h"
 #include "driver/gpio.h"
+#include "esp_log.h"
 
 #include "easy_input.h"
 
+const char TAG[] = "easy_input";
 static void setup_push_button(uint8_t pin);
 
 // Struct to hold status for a button debounce
@@ -122,6 +124,7 @@ void easy_input_push_button_task( void *input_queue ){
 
         // If a debounced button is triggered, send it off to the queue
         if(triggered_buttons){
+            ESP_LOGD(TAG, "button triggered");
             xQueueSend(*(QueueHandle_t *)input_queue, &triggered_buttons, 0);
         }
     }
