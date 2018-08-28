@@ -14,7 +14,7 @@
 
 #include "easy_input.h"
 
-const char TAG[] = "easy_input";
+static const char TAG[] = "easy_input";
 static void setup_push_button(uint8_t pin);
 
 // Struct to hold status for a button debounce
