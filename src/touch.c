@@ -35,8 +35,8 @@ static void touch_set_thresholds(void) {
         s_pad_init_val[i] = touch_value;
         ESP_LOGI(TAG, "test init: touch pad [%d] val is %d", i, touch_value);
         //set interrupt threshold.
-        ESP_ERROR_CHECK(touch_pad_set_thresh(i, touch_value * 2 / 3));
-
+        ESP_ERROR_CHECK(touch_pad_set_thresh(i, touch_value * 
+                CONFIG_EASY_INPUT_TOUCH_THRESH_PERCENT / 100));
     }
 }
 
@@ -94,13 +94,11 @@ static void touch_setup() {
 static bool check_pad(uint8_t pad) {
     bool res = false;
     if (s_pad_activated[pad] == true) {
-        ESP_LOGI(TAG, "T%d activated!", pad);
+        ESP_LOGD(TAG, "T%d activated!", pad);
         if( s_pad_counter[pad] == 0 ) {
             res = true;
         }
-        if( s_pad_counter[pad] < 8) {
-            s_pad_counter[pad] += 8;
-        }
+        s_pad_counter[pad] = 5;
         s_pad_activated[pad] = false;
     }
     else {
@@ -155,6 +153,5 @@ void touch_task( void *input_queue ) {
     }
     vTaskDelete(NULL); // Should never reach here!
 }
-
 
 #endif

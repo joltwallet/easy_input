@@ -148,7 +148,7 @@ menu "Easy_Input Config"
         config EASY_INPUT_TOUCH_FILTER_PERIOD_MS
             int
             depends on EASY_INPUT_TOUCH_ENABLE
-            range 0 1000
+            range 0 100
             prompt "Touch filter calibration."
             default 10
             help
