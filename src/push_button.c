@@ -60,7 +60,8 @@ static bool button_periodic_update(push_button_t *button){
 
 
 static push_button_t up_pb, down_pb, left_pb, right_pb, back_pb, enter_pb;
-void pb_setup() {
+
+static void pb_setup() {
 #if CONFIG_EASY_INPUT_PUSH_BUTTON_UP_PIN != -1
     init_push_button(&up_pb, CONFIG_EASY_INPUT_PUSH_BUTTON_UP_PIN);
 #endif
@@ -81,7 +82,7 @@ void pb_setup() {
 #endif
 }
 
-uint64_t pb_trigger() {
+static uint64_t pb_trigger() {
     uint64_t triggered_buttons = 0;
 #if CONFIG_EASY_INPUT_PUSH_BUTTON_UP_PIN != -1
     triggered_buttons |= (button_periodic_update(&up_pb) << \
@@ -108,6 +109,23 @@ uint64_t pb_trigger() {
             EASY_INPUT_ENTER);
 #endif
     return triggered_buttons;
+}
+
+void pb_task( void *input_queue) {
+    pb_setup();
+    for(uint64_t triggered_buttons=0;;
+            vTaskDelay(pdMS_TO_TICKS(
+            CONFIG_EASY_INPUT_PUSH_BUTTON_POLLING_PERIOD_MS))) {
+        triggered_buttons = 0;
+        triggered_buttons |= pb_trigger();
+        // If a button is triggered, send it off to the queue
+        if(triggered_buttons){
+            ESP_LOGD(TAG, "button triggered");
+            xQueueSend(*(QueueHandle_t *)input_queue, &triggered_buttons, 0);
+        }
+    }
+    vTaskDelete(NULL); // Should never reach here!
+
 }
 
 static void setup_push_button(uint8_t pin){

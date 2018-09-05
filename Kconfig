@@ -149,7 +149,7 @@ menu "Easy_Input Config"
             int
             depends on EASY_INPUT_TOUCH_ENABLE
             range 0 1000
-            prompt "Milliseconds between push button polling periods"
+            prompt "Touch filter calibration."
             default 10
             help
                 Touch filter calibration.
@@ -158,7 +158,7 @@ menu "Easy_Input Config"
             int
             depends on EASY_INPUT_TOUCH_ENABLE
             range 0 100
-            prompt "Number of polling cycles with switch in active state to be considered actuated"
+            prompt "Percentage of initial capacitance to trigger a touch."
             default 80
             help
                 Percentage of initial capacitance to trigger a touch.

@@ -36,14 +36,10 @@ static void print_binary(uint64_t x){
 
 TEST_CASE("Push Button 10 Times", "[easy_input]"){
     QueueHandle_t input_queue;
-    TaskHandle_t h_push_button = NULL;
     uint64_t input_buf;
 
     easy_input_queue_init(&input_queue);
-    xTaskCreate(easy_input_task, \
-            "ButtonDebounce", 2048,
-            (void *)&input_queue, 20, \
-            &h_push_button);
+    easy_input_run( &input_queue );
 
     for(int i=0; i< 10; i++){
         // Block until user inputs a button
@@ -53,10 +49,11 @@ TEST_CASE("Push Button 10 Times", "[easy_input]"){
             printf("\n");
         }
     }
+    easy_input_stop();
     vQueueDelete(input_queue);
-    vTaskDelete(h_push_button);
 }
 
+#if 0
 TEST_CASE("Touch 10 Times", "[easy_input]"){
     QueueHandle_t input_queue;
     TaskHandle_t h_push_button = NULL;
@@ -78,3 +75,4 @@ TEST_CASE("Touch 10 Times", "[easy_input]"){
     }
     vTaskDelete(h_push_button);
 }
+#endif
