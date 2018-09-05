@@ -53,10 +53,10 @@ TEST_CASE("Push Button 10 Times", "[easy_input]"){
             printf("\n");
         }
     }
+    vQueueDelete(input_queue);
     vTaskDelete(h_push_button);
 }
 
-#if 0
 TEST_CASE("Touch 10 Times", "[easy_input]"){
     QueueHandle_t input_queue;
     TaskHandle_t h_push_button = NULL;
@@ -78,4 +78,3 @@ TEST_CASE("Touch 10 Times", "[easy_input]"){
     }
     vTaskDelete(h_push_button);
 }
-#endif
