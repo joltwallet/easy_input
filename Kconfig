@@ -94,7 +94,7 @@ menu "Easy_Input Config"
         config EASY_INPUT_TOUCH_UP_PIN
             int 
             depends on EASY_INPUT_TOUCH_ENABLE
-            range -1 39
+            range -1 9
             prompt "Pin for UP Input"
             default -1
             help
@@ -103,7 +103,7 @@ menu "Easy_Input Config"
         config EASY_INPUT_TOUCH_DOWN_PIN
             int 
             depends on EASY_INPUT_TOUCH_ENABLE
-            range -1 39
+            range -1 9
             prompt "Pin for DOWN Input"
             default -1
             help
@@ -112,7 +112,7 @@ menu "Easy_Input Config"
         config EASY_INPUT_TOUCH_LEFT_PIN
             int 
             depends on EASY_INPUT_TOUCH_ENABLE
-            range -1 39
+            range -1 9
             prompt "Pin for LEFT Input"
             default -1
             help
@@ -121,7 +121,7 @@ menu "Easy_Input Config"
         config EASY_INPUT_TOUCH_RIGHT_PIN
             int 
             depends on EASY_INPUT_TOUCH_ENABLE
-            range -1 39
+            range -1 9
             prompt "Pin for RIGHT Input"
             default -1
             help
@@ -130,7 +130,7 @@ menu "Easy_Input Config"
         config EASY_INPUT_TOUCH_BACK_PIN
             int 
             depends on EASY_INPUT_TOUCH_ENABLE
-            range -1 39
+            range -1 9
             prompt "Pin for BACK Input"
             default -1
             help
@@ -139,7 +139,7 @@ menu "Easy_Input Config"
         config EASY_INPUT_TOUCH_ENTER_PIN
             int 
             depends on EASY_INPUT_TOUCH_ENABLE
-            range -1 39
+            range -1 9
             prompt "Pin for ENTER Input"
             default -1
             help

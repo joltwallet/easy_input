@@ -15,6 +15,7 @@
 #include "easy_input.h"
 #include "push_button.h"
 
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_ENABLE
 static const char TAG[] = "easy_input";
 static void setup_push_button(uint8_t pin);
 
@@ -120,12 +121,11 @@ void pb_task( void *input_queue) {
         triggered_buttons |= pb_trigger();
         // If a button is triggered, send it off to the queue
         if(triggered_buttons){
-            ESP_LOGD(TAG, "button triggered");
+            ESP_LOGD(TAG, "push button triggered");
             xQueueSend(*(QueueHandle_t *)input_queue, &triggered_buttons, 0);
         }
     }
     vTaskDelete(NULL); // Should never reach here!
-
 }
 
 static void setup_push_button(uint8_t pin){
@@ -138,3 +138,4 @@ static void setup_push_button(uint8_t pin){
     config.intr_type = GPIO_PIN_INTR_NEGEDGE;
     gpio_config(&config); // Apply Configurations
 }
+#endif

@@ -9,6 +9,7 @@
 
 static const char TAG[] = "easy_input_common";
 static TaskHandle_t h_push_button = NULL;
+static TaskHandle_t h_touch = NULL;
 
 void easy_input_queue_init(QueueHandle_t *input_queue){
     *input_queue = xQueueCreate(5, sizeof(uint64_t));
@@ -22,18 +23,29 @@ void easy_input_run( QueueHandle_t *input_queue ) {
     /* Setup Inputs */
 #if CONFIG_EASY_INPUT_PUSH_BUTTON_ENABLE
     xTaskCreate(pb_task, \
-            "ButtonDebounce", 2048,
+            "PushButton", 2048,
             (void *)input_queue, 20, \
             &h_push_button);
 #endif
 #if CONFIG_EASY_INPUT_TOUCH_ENABLE
-    touch_setup();
+    xTaskCreate(touch_task, \
+            "Touch", 2048,
+            (void *)input_queue, 20, \
+            &h_touch);
 #endif
 }
 
 void easy_input_stop() {
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_ENABLE
     if( NULL != h_push_button ) {
         vTaskDelete(h_push_button);
         h_push_button = NULL;
     }
+#endif
+#if CONFIG_EASY_INPUT_TOUCH_ENABLE
+    if( NULL != h_touch ) {
+        vTaskDelete(h_touch);
+        h_touch = NULL;
+    }
+#endif
 }
