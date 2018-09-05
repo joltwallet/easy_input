@@ -40,8 +40,31 @@ TEST_CASE("Push Button 10 Times", "[easy_input]"){
     uint64_t input_buf;
 
     easy_input_queue_init(&input_queue);
-    xTaskCreate(easy_input_push_button_task, \
+    xTaskCreate(easy_input_task, \
             "ButtonDebounce", 2048,
+            (void *)&input_queue, 20, \
+            &h_push_button);
+
+    for(int i=0; i< 10; i++){
+        // Block until user inputs a button
+        if(xQueueReceive(input_queue, &input_buf, portMAX_DELAY)) {
+            printf("User 1Input #%d: 0b", i);
+            print_binary(input_buf);
+            printf("\n");
+        }
+    }
+    vTaskDelete(h_push_button);
+}
+
+#if 0
+TEST_CASE("Touch 10 Times", "[easy_input]"){
+    QueueHandle_t input_queue;
+    TaskHandle_t h_push_button = NULL;
+    uint64_t input_buf;
+
+    easy_input_queue_init(&input_queue);
+    xTaskCreate(easy_input_task, \
+            "InputTask", 2048,
             (void *)&input_queue, 20, \
             &h_push_button);
 
@@ -55,3 +78,4 @@ TEST_CASE("Push Button 10 Times", "[easy_input]"){
     }
     vTaskDelete(h_push_button);
 }
+#endif

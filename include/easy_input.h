@@ -20,6 +20,6 @@ typedef enum buttons{
 } buttons_t;
 
 void easy_input_queue_init(QueueHandle_t *input_queue);
-void easy_input_push_button_task( void *input_queue );
+void easy_input_task( void *input_queue );
 
 #endif

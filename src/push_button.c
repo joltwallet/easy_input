@@ -13,6 +13,7 @@
 #include "esp_log.h"
 
 #include "easy_input.h"
+#include "push_button.h"
 
 static const char TAG[] = "easy_input";
 static void setup_push_button(uint8_t pin);
@@ -29,10 +30,6 @@ static void init_push_button(push_button_t *x, uint8_t pin){
     x->pin = pin;
     x->counter = 0;
     x->prev_state = true;
-}
-
-void easy_input_queue_init(QueueHandle_t *input_queue){
-    *input_queue = xQueueCreate(5, sizeof(uint64_t));
 }
 
 static bool button_periodic_update(push_button_t *button){
@@ -59,6 +56,58 @@ static bool button_periodic_update(push_button_t *button){
         }
     }
     return false;
+}
+
+
+static push_button_t up_pb, down_pb, left_pb, right_pb, back_pb, enter_pb;
+void pb_setup() {
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_UP_PIN != -1
+    init_push_button(&up_pb, CONFIG_EASY_INPUT_PUSH_BUTTON_UP_PIN);
+#endif
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_DOWN_PIN != -1
+    init_push_button(&down_pb, CONFIG_EASY_INPUT_PUSH_BUTTON_DOWN_PIN);
+#endif
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_LEFT_PIN != -1
+    init_push_button(&left_pb, CONFIG_EASY_INPUT_PUSH_BUTTON_LEFT_PIN);
+#endif
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_RIGHT_PIN != -1
+    init_push_button(&right_pb, CONFIG_EASY_INPUT_PUSH_BUTTON_RIGHT_PIN);
+#endif
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_BACK_PIN != -1
+    init_push_button(&back_pb, CONFIG_EASY_INPUT_PUSH_BUTTON_BACK_PIN);
+#endif
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_ENTER_PIN != -1
+    init_push_button(&enter_pb, CONFIG_EASY_INPUT_PUSH_BUTTON_ENTER_PIN);
+#endif
+}
+
+uint64_t pb_trigger() {
+    uint64_t triggered_buttons = 0;
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_UP_PIN != -1
+    triggered_buttons |= (button_periodic_update(&up_pb) << \
+            EASY_INPUT_UP);
+#endif
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_DOWN_PIN != -1
+    triggered_buttons |= (button_periodic_update(&down_pb) << \
+            EASY_INPUT_DOWN);
+#endif
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_LEFT_PIN != -1
+    triggered_buttons |= (button_periodic_update(&left_pb) << \
+            EASY_INPUT_LEFT);
+#endif
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_RIGHT_PIN != -1
+    triggered_buttons |= (button_periodic_update(&right_pb) << \
+            EASY_INPUT_RIGHT);
+#endif
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_BACK_PIN != -1
+    triggered_buttons |= (button_periodic_update(&back_pb) << \
+            EASY_INPUT_BACK);
+#endif
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_ENTER_PIN != -1
+    triggered_buttons |= (button_periodic_update(&enter_pb) << \
+            EASY_INPUT_ENTER);
+#endif
+    return triggered_buttons;
 }
 
 void easy_input_push_button_task( void *input_queue ){
