@@ -82,6 +82,86 @@ menu "Easy_Input Config"
                 cycle. A switch's counter is decremented everytime it is not active during
                 a polling cycle. When a button's counter reaches this threshold, it is
                 considered a successful button push.
+    endmenu
+
+    menu "Touch"
+        config EASY_INPUT_TOUCH_ENABLE
+            bool "Enable Touch Pad Inputs"
+            default y
+            help
+                This enables the use of internal touch sensors as input
+
+        config EASY_INPUT_TOUCH_UP_PIN
+            int 
+            depends on EASY_INPUT_TOUCH_ENABLE
+            range -1 9
+            prompt "Pin for UP Input"
+            default -1
+            help
+                ESP32 GPIO Number
+
+        config EASY_INPUT_TOUCH_DOWN_PIN
+            int 
+            depends on EASY_INPUT_TOUCH_ENABLE
+            range -1 9
+            prompt "Pin for DOWN Input"
+            default -1
+            help
+                ESP32 GPIO Number
+
+        config EASY_INPUT_TOUCH_LEFT_PIN
+            int 
+            depends on EASY_INPUT_TOUCH_ENABLE
+            range -1 9
+            prompt "Pin for LEFT Input"
+            default -1
+            help
+                ESP32 GPIO Number
+
+        config EASY_INPUT_TOUCH_RIGHT_PIN
+            int 
+            depends on EASY_INPUT_TOUCH_ENABLE
+            range -1 9
+            prompt "Pin for RIGHT Input"
+            default -1
+            help
+                ESP32 GPIO Number
+
+        config EASY_INPUT_TOUCH_BACK_PIN
+            int 
+            depends on EASY_INPUT_TOUCH_ENABLE
+            range -1 9
+            prompt "Pin for BACK Input"
+            default -1
+            help
+                ESP32 GPIO Number
+
+        config EASY_INPUT_TOUCH_ENTER_PIN
+            int 
+            depends on EASY_INPUT_TOUCH_ENABLE
+            range -1 9
+            prompt "Pin for ENTER Input"
+            default -1
+            help
+                ESP32 GPIO Number
+
+        config EASY_INPUT_TOUCH_FILTER_PERIOD_MS
+            int
+            depends on EASY_INPUT_TOUCH_ENABLE
+            range 0 100
+            prompt "Touch filter calibration."
+            default 10
+            help
+                Touch filter calibration.
+
+        config EASY_INPUT_TOUCH_THRESH_PERCENT
+            int
+            depends on EASY_INPUT_TOUCH_ENABLE
+            range 0 100
+            prompt "Percentage of initial capacitance to trigger a touch."
+            default 80
+            help
+                Percentage of initial capacitance to trigger a touch.
         endmenu
 
 endmenu
