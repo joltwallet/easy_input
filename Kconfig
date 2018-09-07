@@ -157,11 +157,11 @@ menu "Easy_Input Config"
         config EASY_INPUT_TOUCH_THRESH_PERCENT
             int
             depends on EASY_INPUT_TOUCH_ENABLE
-            range 0 100
+            range 0 1000
             prompt "Percentage of initial capacitance to trigger a touch."
             default 80
             help
-                Percentage of initial capacitance to trigger a touch.
+                Percentage of initial capacitance to trigger a touch. Divide by 1000 to get percentage.
         endmenu
 
 endmenu

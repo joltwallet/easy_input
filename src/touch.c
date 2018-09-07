@@ -14,9 +14,10 @@
 
 #define TOUCH_THRESH_NO_USE   (0)
 static const char TAG[] = "easy_input_touch";
-static bool s_pad_activated[TOUCH_PAD_MAX];
+static uint8_t s_pad_activated[TOUCH_PAD_MAX];
 static uint32_t s_pad_init_val[TOUCH_PAD_MAX];
 static uint8_t s_pad_counter[TOUCH_PAD_MAX] = { 0 };
+static bool s_pad_state[TOUCH_PAD_MAX] = { false };
 
 /*
   Read values sensed at all available touch pads.
@@ -34,9 +35,11 @@ static void touch_set_thresholds(void) {
         touch_pad_read_filtered(i, &touch_value);
         s_pad_init_val[i] = touch_value;
         ESP_LOGI(TAG, "test init: touch pad [%d] val is %d", i, touch_value);
+        float thresh = touch_value;
+        thresh *= CONFIG_EASY_INPUT_TOUCH_THRESH_PERCENT;
+        thresh /= 1000;
         //set interrupt threshold.
-        ESP_ERROR_CHECK(touch_pad_set_thresh(i, touch_value * 
-                CONFIG_EASY_INPUT_TOUCH_THRESH_PERCENT / 100));
+        ESP_ERROR_CHECK(touch_pad_set_thresh(i, (uint16_t)thresh));
     }
 }
 
@@ -49,8 +52,8 @@ static void touch_rtc_intr(void *arg) {
     //clear interrupt
     touch_pad_clear_status();
     for (int i = 0; i < TOUCH_PAD_MAX; i++) {
-        if ((pad_intr >> i) & 0x01) {
-            s_pad_activated[i] = true;
+        if ((pad_intr >> i) & 0x01 && s_pad_activated[i]<255) {
+            s_pad_activated[i] += 1;
         }
     }
 }
@@ -89,17 +92,26 @@ static void touch_setup() {
 
     // Register touch interrupt ISR
     touch_pad_isr_register(touch_rtc_intr, NULL);
+    touch_pad_intr_enable();
 }
 
 static bool check_pad(uint8_t pad) {
     bool res = false;
-    if (s_pad_activated[pad] == true) {
+    if (s_pad_activated[pad]) {
+        uint8_t tmp = s_pad_activated[pad];
+        s_pad_activated[pad] = 0;
         ESP_LOGD(TAG, "T%d activated!", pad);
         if( s_pad_counter[pad] == 0 ) {
-            res = true;
+            s_pad_state[pad] = false;
         }
-        s_pad_counter[pad] = 5;
-        s_pad_activated[pad] = false;
+        if( s_pad_counter[pad] < 3) {
+            s_pad_state[pad] = false;
+            s_pad_counter[pad] += tmp;
+        }
+        if( s_pad_counter[pad] > 2 && s_pad_state[pad] == false) {
+            res = true;
+            s_pad_state[pad] = true;
+        }
     }
     else {
         if(s_pad_counter[pad] > 0) {
@@ -111,7 +123,6 @@ static bool check_pad(uint8_t pad) {
 
 static uint64_t touch_trigger() {
     uint64_t triggered_buttons = 0;
-    touch_pad_intr_enable();
 #if CONFIG_EASY_INPUT_TOUCH_UP_PIN != -1
     triggered_buttons |= (check_pad(CONFIG_EASY_INPUT_TOUCH_UP_PIN) << \
             EASY_INPUT_UP);
@@ -141,8 +152,7 @@ static uint64_t touch_trigger() {
 
 void touch_task( void *input_queue ) {
     touch_setup();
-    for(uint64_t triggered_buttons=0;;
-            vTaskDelay(pdMS_TO_TICKS(10))) {
+    for(uint64_t triggered_buttons=0;;vTaskDelay(pdMS_TO_TICKS(31))) {
         triggered_buttons = 0;
         triggered_buttons |= touch_trigger();
         // If a button is triggered, send it off to the queue
