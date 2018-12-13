@@ -19,6 +19,12 @@ static uint32_t s_pad_init_val[TOUCH_PAD_MAX];
 static uint8_t s_pad_counter[TOUCH_PAD_MAX] = { 0 };
 static bool s_pad_state[TOUCH_PAD_MAX] = { false };
 
+#if CONFIG_EASY_INPUT_HOLD_ENABLE
+static uint8_t s_pad_hold_delay_counter[TOUCH_PAD_MAX] = { 0 };
+static uint8_t s_pad_hold_period_counter[TOUCH_PAD_MAX] = { 0 };
+static uint8_t s_pad_hold_miss_counter[TOUCH_PAD_MAX] = { 0 };
+#endif
+
 /*
   Read values sensed at all available touch pads.
   Use 2 / 3 of read value as the threshold
@@ -98,9 +104,15 @@ static void touch_setup() {
 static bool check_pad(uint8_t pad) {
     bool res = false;
     if (s_pad_activated[pad]) {
+        ESP_LOGD(TAG, "T%d activated!", pad);
+
         uint8_t tmp = s_pad_activated[pad];
         s_pad_activated[pad] = 0;
-        ESP_LOGD(TAG, "T%d activated!", pad);
+
+        #if CONFIG_EASY_INPUT_HOLD_ENABLE
+        s_pad_hold_miss_counter[pad] = 0;
+        #endif
+
         if( s_pad_counter[pad] == 0 ) {
             s_pad_state[pad] = false;
         }
@@ -108,15 +120,50 @@ static bool check_pad(uint8_t pad) {
             s_pad_state[pad] = false;
             s_pad_counter[pad] += tmp;
         }
-        if( s_pad_counter[pad] > 2 && s_pad_state[pad] == false) {
-            res = true;
-            s_pad_state[pad] = true;
+        if( s_pad_counter[pad] > 2 ){
+            if (s_pad_state[pad] == false) {
+                res = true;
+                s_pad_state[pad] = true;
+            }
+
+            #if CONFIG_EASY_INPUT_HOLD_ENABLE
+            /* Manage Hold */
+            if(s_pad_hold_delay_counter[pad] > CONFIG_EASY_INPUT_HOLD_FAST_DELAY){
+                s_pad_hold_period_counter[pad] = 
+                    (s_pad_hold_period_counter[pad] + 1) % CONFIG_EASY_INPUT_HOLD_FAST_PERIOD;
+                if( 0 == s_pad_hold_period_counter[pad] ) {
+                    res = true;
+                }
+            }
+            else if(s_pad_hold_delay_counter[pad] > CONFIG_EASY_INPUT_HOLD_SLOW_DELAY){
+                s_pad_hold_delay_counter[pad]++;
+                s_pad_hold_period_counter[pad] = 
+                    (s_pad_hold_period_counter[pad] + 1) % CONFIG_EASY_INPUT_HOLD_SLOW_PERIOD;
+                if( 0 == s_pad_hold_period_counter[pad] ){
+                    res = true;
+                }
+            }
+            else{
+                s_pad_hold_delay_counter[pad]++;
+            }
+            #endif
         }
     }
     else {
         if(s_pad_counter[pad] > 0) {
             s_pad_counter[pad]--;
         }
+
+        #if CONFIG_EASY_INPUT_HOLD_ENABLE
+        /* todo; make this a little robust against blips */
+        if( s_pad_hold_miss_counter[pad] > 2 ){
+            s_pad_hold_miss_counter[pad] = 0;
+            s_pad_hold_delay_counter[pad] = 0;
+        }
+        else {
+            s_pad_hold_miss_counter[pad]++;
+        }
+        #endif
     }
     return res;
 }
@@ -152,7 +199,7 @@ static uint64_t touch_trigger() {
 
 void touch_task( void *input_queue ) {
     touch_setup();
-    for(uint64_t triggered_buttons=0;;vTaskDelay(pdMS_TO_TICKS(31))) {
+    for(uint64_t triggered_buttons=0;;vTaskDelay(pdMS_TO_TICKS(CONFIG_EASY_INPUT_TOUCH_PERIOD))) {
         triggered_buttons = 0;
         triggered_buttons |= touch_trigger();
         // If a button is triggered, send it off to the queue

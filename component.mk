@@ -1,3 +1,5 @@
+COMPONENT_NAME := easy_input
+
 COMPONENT_ADD_INCLUDEDIRS := include
 COMPONENT_SRCDIRS := src
 

@@ -162,6 +162,53 @@ menu "Easy_Input Config"
             default 80
             help
                 Percentage of initial capacitance to trigger a touch. Divide by 1000 to get percentage.
+        config EASY_INPUT_TOUCH_PERIOD
+           int
+           depends on EASY_INPUT_TOUCH_ENABLE
+           default 33
+           prompt "Time in ms between polls"
+           help
+              help text here
+
+        config EASY_INPUT_HOLD_ENABLE
+            bool
+            default y
+            prompt "Enable Holding"
+            help
+               Enable hold for repeated touch
+
+        config EASY_INPUT_HOLD_SLOW_DELAY
+            int
+            depends on EASY_INPUT_HOLD_ENABLE
+            default 15
+            prompt "Holding Slow Delay"
+            help
+               Number of periods from initial press until repeated touches at slow rate.
+
+        config EASY_INPUT_HOLD_FAST_DELAY
+            int
+            depends on EASY_INPUT_HOLD_ENABLE
+            default 30
+            prompt "Holding Fast Delay"
+            help
+               Number of periods from initial press until repeated touches at fast rate.
+
+        config EASY_INPUT_HOLD_SLOW_PERIOD
+            int
+            depends on EASY_INPUT_HOLD_ENABLE
+            default 10
+            prompt "Holding Slow Period"
+            help
+                period between slow repeat presses.
+
+        config EASY_INPUT_HOLD_FAST_PERIOD
+            int
+            depends on EASY_INPUT_HOLD_ENABLE
+            default 5
+            prompt "Holding Fast Period"
+            help
+                period between fast repeat presses.
+
         endmenu
 
 endmenu
