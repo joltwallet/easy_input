@@ -199,7 +199,8 @@ static uint64_t touch_trigger() {
 
 void touch_task( void *input_queue ) {
     touch_setup();
-    for(uint64_t triggered_buttons=0;;vTaskDelay(pdMS_TO_TICKS(CONFIG_EASY_INPUT_TOUCH_PERIOD))) {
+    TickType_t xLastWakeTime = xTaskGetTickCount();
+    for(uint64_t triggered_buttons=0;;vTaskDelayUntil( &xLastWakeTime, pdMS_TO_TICKS(CONFIG_EASY_INPUT_TOUCH_PERIOD))) {
         triggered_buttons = 0;
         triggered_buttons |= touch_trigger();
         // If a button is triggered, send it off to the queue
