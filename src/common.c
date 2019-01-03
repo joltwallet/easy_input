@@ -8,8 +8,12 @@
 #include "touch.h"
 
 static const char TAG[] = "easy_input_common";
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_ENABLE
 static TaskHandle_t h_push_button = NULL;
+#endif
+#if CONFIG_EASY_INPUT_TOUCH_ENABLE
 static TaskHandle_t h_touch = NULL;
+#endif
 
 void easy_input_queue_init(QueueHandle_t *input_queue){
     *input_queue = xQueueCreate(5, sizeof(uint64_t));
