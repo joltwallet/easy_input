@@ -27,13 +27,13 @@ void easy_input_run( QueueHandle_t *input_queue ) {
     /* Setup Inputs */
 #if CONFIG_EASY_INPUT_PUSH_BUTTON_ENABLE
     xTaskCreate(pb_task, \
-            "PushButton", 4096,
+            "PushButton", 1520,
             (void *)input_queue, 20, \
             &h_push_button);
 #endif
 #if CONFIG_EASY_INPUT_TOUCH_ENABLE
     xTaskCreate(touch_task, \
-            "Touch", 4096,
+            "Touch", 1520,
             (void *)input_queue, 20, \
             &h_touch);
 #endif
