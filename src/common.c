@@ -33,7 +33,7 @@ void easy_input_run( QueueHandle_t *input_queue ) {
 #endif
 #if CONFIG_EASY_INPUT_TOUCH_ENABLE
     xTaskCreate(touch_task, \
-            "Touch", 1520,
+            "Touch", 2048,
             (void *)input_queue, 20, \
             &h_touch);
 #endif
