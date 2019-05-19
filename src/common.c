@@ -8,6 +8,7 @@
 #include "touch.h"
 
 static const char TAG[] = "easy_input_common";
+
 #if CONFIG_EASY_INPUT_PUSH_BUTTON_ENABLE
 static TaskHandle_t h_push_button = NULL;
 #endif
@@ -26,12 +27,14 @@ void easy_input_run( QueueHandle_t *input_queue ) {
 
     /* Setup Inputs */
 #if CONFIG_EASY_INPUT_PUSH_BUTTON_ENABLE
+    ESP_LOGD(TAG, "Creating EasyInput PushButton Task");
     xTaskCreate(pb_task, \
             "PushButton", 1520,
             (void *)input_queue, 20, \
             &h_push_button);
 #endif
 #if CONFIG_EASY_INPUT_TOUCH_ENABLE
+    ESP_LOGD(TAG, "Creating EasyInput Touch Task");
     xTaskCreate(touch_task, \
             "Touch", 2048,
             (void *)input_queue, 20, \
