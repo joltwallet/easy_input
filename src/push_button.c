@@ -119,11 +119,18 @@ void pb_task( void *input_queue) {
             CONFIG_EASY_INPUT_PUSH_BUTTON_POLLING_PERIOD_MS))) {
         triggered_buttons = 0;
         triggered_buttons |= pb_trigger();
+
+#if CONFIG_EASY_INPUT_VOLATILE
+        easy_input_state = triggered_buttons
+#endif
+
         // If a button is triggered, send it off to the queue
+#if CONFIG_EASY_INPUT_QUEUE
         if(triggered_buttons){
             ESP_LOGD(TAG, "push button triggered");
             xQueueSend(*(QueueHandle_t *)input_queue, &triggered_buttons, 0);
         }
+#endif
     }
     vTaskDelete(NULL); // Should never reach here!
 }

@@ -211,4 +211,19 @@ menu "Easy_Input Config"
 
         endmenu
 
+    config EASY_INPUT_QUEUE
+        bool
+        default y
+        prompt "Place pressed buttons on a queue"
+        help
+            Place pressed buttons on a queue for external consumption.
+
+    config EASY_INPUT_VOLATILE
+        bool
+        default y
+        prompt "Toggle bits of a volatile variable when buttons are pressed."
+        help
+            Set bits in a volatile variable for when buttons are pressed for
+            external consumption.
+
 endmenu

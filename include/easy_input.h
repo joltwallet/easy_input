@@ -8,6 +8,12 @@
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/queue.h"
+#include "sdkconfig.h"
+
+#if CONFIG_EASY_INPUT_VOLATILE
+extern volatile uint64_t easy_input_state;
+#endif
+
 
 typedef enum buttons{
     EASY_INPUT_UP,

@@ -10,6 +10,7 @@
 
 #include "easy_input.h"
 #include "touch.h"
+
 #if CONFIG_EASY_INPUT_TOUCH_ENABLE
 
 #define TOUCH_THRESH_NO_USE   (0)
@@ -203,11 +204,18 @@ void touch_task( void *input_queue ) {
     for(uint64_t triggered_buttons=0;;vTaskDelayUntil( &xLastWakeTime, pdMS_TO_TICKS(CONFIG_EASY_INPUT_TOUCH_PERIOD))) {
         triggered_buttons = 0;
         triggered_buttons |= touch_trigger();
+
+#if CONFIG_EASY_INPUT_VOLATILE
+        easy_input_state = triggered_buttons;
+#endif
+
         // If a button is triggered, send it off to the queue
+#if CONFIG_EASY_INPUT_QUEUE
         if(triggered_buttons){
             ESP_LOGD(TAG, "touch triggered");
             xQueueSend(*(QueueHandle_t *)input_queue, &triggered_buttons, 0);
         }
+#endif
     }
     vTaskDelete(NULL); // Should never reach here!
 }

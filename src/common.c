@@ -6,6 +6,7 @@
 
 #include "push_button.h"
 #include "touch.h"
+#include "easy_input.h"
 
 static const char TAG[] = "easy_input_common";
 
@@ -14,6 +15,10 @@ static TaskHandle_t h_push_button = NULL;
 #endif
 #if CONFIG_EASY_INPUT_TOUCH_ENABLE
 static TaskHandle_t h_touch = NULL;
+#endif
+
+#if CONFIG_EASY_INPUT_VOLATILE
+volatile uint64_t easy_input_state = 0;
 #endif
 
 void easy_input_queue_init(QueueHandle_t *input_queue){
