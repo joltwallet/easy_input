@@ -41,7 +41,7 @@ void easy_input_run( QueueHandle_t *input_queue ) {
 #if CONFIG_EASY_INPUT_TOUCH_ENABLE
     ESP_LOGD(TAG, "Creating EasyInput Touch Task");
     xTaskCreate(touch_task, \
-            "Touch", 2048,
+            "Touch", 4096,
             (void *)input_queue, 20, \
             &h_touch);
 #endif
