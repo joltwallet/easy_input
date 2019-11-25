@@ -121,7 +121,7 @@ void pb_task( void *input_queue) {
         triggered_buttons |= pb_trigger();
 
 #if CONFIG_EASY_INPUT_VOLATILE
-        easy_input_state = triggered_buttons
+        easy_input_state = triggered_buttons;
 #endif
 
         // If a button is triggered, send it off to the queue
