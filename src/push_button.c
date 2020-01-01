@@ -44,7 +44,10 @@ static bool button_periodic_update(push_button_t *button){
         }
         else if(button->prev_state && \
                 button->counter >= CONFIG_EASY_INPUT_PUSH_BUTTON_DEBOUNCE_PERIOD){
+
+#if !CONFIG_EASY_INPUT_HOLD_ENABLE
             button->prev_state = false;
+#endif
             return true;
         }
     }
