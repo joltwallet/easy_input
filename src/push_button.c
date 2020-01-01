@@ -16,7 +16,7 @@
 #include "push_button.h"
 
 #if CONFIG_EASY_INPUT_PUSH_BUTTON_ENABLE
-static const char TAG[] = "easy_input";
+static const char TAG[] = "easy_input_push_button";
 static void setup_push_button(uint8_t pin);
 
 // Struct to hold status for a button debounce
@@ -60,7 +60,24 @@ static bool button_periodic_update(push_button_t *button){
 }
 
 
-static push_button_t up_pb, down_pb, left_pb, right_pb, back_pb, enter_pb;
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_UP_PIN != -1
+static push_button_t up_pb;
+#endif
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_DOWN_PIN != -1
+static push_button_t down_pb;
+#endif
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_LEFT_PIN != -1
+static push_button_t left_pb;
+#endif
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_RIGHT_PIN != -1
+static push_button_t right_pb;
+#endif
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_BACK_PIN != -1
+static push_button_t back_pb;
+#endif
+#if CONFIG_EASY_INPUT_PUSH_BUTTON_ENTER_PIN != -1
+static push_button_t enter_pb;
+#endif
 
 static void pb_setup() {
 #if CONFIG_EASY_INPUT_PUSH_BUTTON_UP_PIN != -1
@@ -125,12 +142,13 @@ void pb_task( void *input_queue) {
 #endif
 
         // If a button is triggered, send it off to the queue
-#if CONFIG_EASY_INPUT_QUEUE
         if(triggered_buttons){
             ESP_LOGD(TAG, "push button triggered");
+
+#if CONFIG_EASY_INPUT_QUEUE
             xQueueSend(*(QueueHandle_t *)input_queue, &triggered_buttons, 0);
-        }
 #endif
+        }
     }
     vTaskDelete(NULL); // Should never reach here!
 }
