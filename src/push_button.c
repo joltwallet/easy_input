@@ -3,6 +3,8 @@
  https://www.joltwallet.com/
  */
 
+//#define LOG_LOCAL_LEVEL ESP_LOG_DEBUG
+
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -158,6 +160,10 @@ void pb_task( void *input_queue) {
 
 static void setup_push_button(uint8_t pin){
     /* Setup a single pin as an input */
+    if(pin >= 34 && pin <= 39) {
+        ESP_LOGW(TAG, "Pin GPIO%d doesn't have an internal pull-up resistor", pin);
+    }
+
     gpio_config_t config; // config object
     config.mode = GPIO_MODE_INPUT;
     config.pin_bit_mask = 1ULL << pin;
