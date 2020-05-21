@@ -34,7 +34,7 @@ void easy_input_run( QueueHandle_t *input_queue ) {
 #if CONFIG_EASY_INPUT_PUSH_BUTTON_ENABLE
     ESP_LOGD(TAG, "Creating EasyInput PushButton Task");
     xTaskCreate(pb_task, \
-            "PushButton", 1520,
+            "PushButton", 2048,
             (void *)input_queue, 20, \
             &h_push_button);
 #endif
